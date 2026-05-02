@@ -135,7 +135,7 @@
     "peer": "^1.0.2",
     "playwright": "^1.53.1",
     "postcss": "^8.4.47",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.3",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "rollup-plugin-visualizer": "^6.0.5",
