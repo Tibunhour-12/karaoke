@@ -1,0 +1,23 @@
+{
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnSave": true,
+  "tailwindCSS.experimental.classRegex": [
+    "twc\\.[^`]+`([^`]*)`",
+    "twc\\([^`]*?\\)`([^`]*)`",
+    ["twc\\.[^`]+\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["twc\\([^`]*?\\).*?\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    "twx\\.[^`]+`([^`]*)`",
+    "twx\\([^`]*?\\)`([^`]*)`",
+    ["twx\\.[^`]+\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["twx\\([^`]*?\\).*?\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "chat.tools.terminal.autoApprove": {
+    "playwright-cli": true,
+    "./node_modules/.bin/tsc": true
+  }
+}
