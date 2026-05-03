@@ -183,6 +183,10 @@ export default function convertTxtToSong(
     ...additionalData,
     tracks: [],
     unsupportedProps: getUnknownProps(text),
+    mp3: getPropertyValueFromTxt(text, ['MP3']),
+    mp3Bass: getPropertyValueFromTxt(text, ['MP3_BASS']),
+    mp3Drums: getPropertyValueFromTxt(text, ['MP3_DRUMS']),
+    mp3Other: getPropertyValueFromTxt(text, ['MP3_OTHER']),
     mergedTrack: {} as any,
   };
 

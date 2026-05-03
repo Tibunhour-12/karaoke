@@ -1,9 +1,11 @@
-﻿import { useState } from "react";
-import { SingSetup, SongPreview } from "~/interfaces";
+﻿import { useEffect } from "react";
+import { v4 } from "uuid";
+import { GAME_MODE, SingSetup, SongPreview } from "~/interfaces";
 import events from "~/modules/GameEvents/GameEvents";
 import GameSettings from "~/routes/SingASong/SongSelectionV2/Components/SongSettings/GameSettings";
 import MicCheck from "~/routes/SingASong/SongSelectionV2/Components/SongSettings/MicCheck";
 import InstrumentSettings from "~/routes/SingASong/SongSelection/Components/SongSettings/InstrumentSettings";
+import { useState } from "react";
 
 interface Props {
   songPreview: SongPreview;
@@ -18,7 +20,10 @@ export default function SongSettings({ songPreview, onPlay, keyboardControl, onE
 
   const onSongStepFinish = (setup: SingSetup) => {
     setSingSetup(setup);
-    setStep("instruments");
+    // Auto skip to instruments
+    const finalSetup = { ...setup, instruments: ["vocals", "bass", "drums", "other"] };
+    events.songStarted.dispatch(songPreview, finalSetup);
+    onPlay({ song: songPreview, ...finalSetup });
   };
 
   const onInstrumentStepFinish = (setup: SingSetup & { instruments: string[] }) => {

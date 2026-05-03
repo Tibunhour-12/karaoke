@@ -1,5 +1,6 @@
+
 import InstrumentSidebar from './Components/InstrumentSidebar';
-import { forwardRef, MutableRefObject, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { GAME_MODE, PlayerSetup, SingSetup, Song } from '~/interfaces';
 import { VideoPlayerRef, VideoState } from '~/modules/Elements/VideoPlayer';
 import PlayersManager from '~/modules/Players/PlayersManager';
@@ -28,7 +29,8 @@ interface Props {
   effectsEnabled: boolean;
   videoPlayerRef: MutableRefObject<VideoPlayerRef | null>;
   isPauseMenuVisible: boolean;
-  singSetup: SingSetup;
+  singSetup?: SingSetup;
+  onInstrumentChange?: (instruments: string[]) => void;
 }
 
 const MAX_RENDER_RESOLUTION_W = 1920;
@@ -46,6 +48,7 @@ const GameOverlay = forwardRef(function (
     duration,
     singSetup,
     song,
+    onInstrumentChange,
   }: Props,
   fRef,
 ) {
@@ -100,12 +103,19 @@ const GameOverlay = forwardRef(function (
     }
   }, [isPauseMenuVisible]);
 
-  useEffect(() => {
-    if (currentStatus === VideoState.ENDED && onSongEnd) {
-      onSongEnd();
-    }
-  }, [currentStatus, onSongEnd]);
+useEffect(() => {
+  if (currentStatus === VideoState.ENDED && onSongEnd) {
+    onSongEnd();
+  }
+}, [currentStatus, onSongEnd]);
+const [activeInstruments, setActiveInstruments] = useState<string[]>(
+  Array.isArray(singSetup?.instruments) ? singSetup.instruments : ['vocals', 'bass', 'drums', 'other']
+);
 
+const handleInstrumentChange = (instruments: string[]) => {
+  setActiveInstruments(instruments);
+  onInstrumentChange?.(instruments);
+};
   const players = PlayersManager.getPlayers();
   const showMultipleLines = !mobilePhoneMode && players.length > 1;
 
@@ -184,8 +194,12 @@ const GameOverlay = forwardRef(function (
         />
         
       </div>
-       {(
-        <InstrumentSidebar songId={song?.id ?? ""} instruments={singSetup?.instruments ?? []} isPlaying={currentStatus === VideoState.PLAYING} />
+       {Array.isArray(singSetup?.instruments) && singSetup.instruments.length > 0 && (
+      <InstrumentSidebar 
+      songId={song?.id ?? ""} 
+      instruments={activeInstruments} 
+      onInstrumentChange={handleInstrumentChange} 
+    />
       )}
     </div>
   );

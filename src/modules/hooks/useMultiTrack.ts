@@ -1,6 +1,5 @@
 import { useRef, useEffect, useCallback } from 'react';
-
-type TrackName = 'vocals' | 'bass' | 'drums' | 'other';
+import { TrackName } from '../GameEngine/TrackControl/TrackContol';
 
 const TRACK_FILES: Record<TrackName, string> = {
   vocals: 'vocals.mp3',

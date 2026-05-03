@@ -38,6 +38,7 @@ export interface PlayerSetup {
 }
 
 export interface SingSetup {
+  instruments: boolean;
   id: string;
   players: PlayerSetup[];
   mode: ValuesType<typeof GAME_MODE>;
@@ -76,6 +77,10 @@ export interface Song {
   id: string;
   unsupportedProps: string[];
   mergedTrack: SongTrack;
+  mp3?: string;
+  mp3Bass?: string;
+  mp3Drums?: string;
+  mp3Other?: string;
 }
 
 export interface SongTrack {

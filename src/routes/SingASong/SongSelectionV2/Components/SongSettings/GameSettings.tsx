@@ -67,12 +67,19 @@ export default function GameSettings({ songPreview, onNextStep, keyboardControl,
   }, [showModal]);
 
   const areInputsConfigured = !!storedPreference && storedPreference !== 'skip';
-
+  // Auto-submit immediately
+useEffect(() => {
+  handlePlay();
+}, [])
   const handlePlay = () => onNextStep({
     id: v4(), players: playerSetup, mode, tolerance: tolerance + 1,
     instruments: false
   });
-
+  // Auto-submit immediately
+useEffect(() => {
+  const timer = setTimeout(() => handlePlay(), 100);
+  return () => clearTimeout(timer);
+}, []);
   const changeMode = () => setMode(nextValue(Object.values(GAME_MODE), mode));
   const changeTolerance = () => setTolerance((current) => nextIndex(difficultyNames, current, -1));
 

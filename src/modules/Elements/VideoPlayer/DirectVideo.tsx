@@ -98,7 +98,7 @@ export default forwardRef(function DirectVideoPlayer(
   }, [startAt, playerApi]);
 
   return (
-    <video style={{ width: size.w, height: size.h }} autoPlay={autoplay} controls={controls} ref={player}>
+    <video muted style={{ width: size.w, height: size.h }} autoPlay={autoplay} controls={controls} ref={player}>
       <source src={video} />
     </video>
   );

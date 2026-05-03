@@ -34,7 +34,6 @@ interface Props extends Omit<ComponentProps<'div'>, 'ref'>, RefAttributes<Player
   onCurrentTimeUpdate?: (newTime: milliseconds) => void;
   onSongEnd?: () => void;
   onStatusChange?: (status: VideoState) => void;
-
   effectsEnabled?: boolean;
   pauseMenu?: boolean;
   restartSong?: () => void;
@@ -59,7 +58,6 @@ function usePlayerSetDuration(playerRef: RefObject<VideoPlayerRef | null>, curre
       });
     }
   }, [duration, playerRef, currentStatus]);
-
   return duration;
 }
 
@@ -82,8 +80,13 @@ function Player({
   const newVolumeFFEnabled = useFeatureFlag(FeatureFlags.NewVolume);
   const player = useRef<VideoPlayerRef | null>(null);
   const [pauseMenuVisible, setPauseMenuVisible] = useState(false);
-
   const { className, ...containerProps } = restProps;
+
+  const [enabledInstruments, setEnabledInstruments] = useState<string[]>(() =>
+    Array.isArray(singSetup.instruments) && singSetup.instruments.length > 0
+      ? singSetup.instruments
+      : ['vocals', 'bass', 'drums', 'other'],
+  );
 
   const updateGameState = useCallback(
     (time: milliseconds) => {
@@ -99,19 +102,13 @@ function Player({
   useEffect(() => {
     GameState.setSong(song);
     GameState.setSingSetup(singSetup);
-
     return () => {
       GameState.resetSingSetup();
     };
   }, [song, singSetup]);
 
-const [enabledInstruments, setEnabledInstruments] = useState<string[]>(() =>
-  Array.isArray(singSetup.instruments)
-    ? singSetup.instruments
-    : ['vocals', 'bass', 'drums', 'other'],
-);
-const duration = usePlayerSetDuration(player, currentStatus);
-useInstrumentAudio(song.id, enabledInstruments, currentStatus === VideoState.PLAYING);
+  const duration = usePlayerSetDuration(player, currentStatus);
+  useInstrumentAudio(song.id, enabledInstruments, currentStatus === VideoState.PLAYING);
 
   useImperativeHandle(ref, () => ({
     seekTo: (time: seconds) => player.current!.seekTo(time),
@@ -149,48 +146,36 @@ useInstrumentAudio(song.id, enabledInstruments, currentStatus === VideoState.PLA
       openPauseMenu();
     }
   };
+
   const previousStatus = usePrevious(currentStatus);
   useEffect(() => {
     if (!isPauseMenuAvailable) return;
-
     const wasJustPaused =
       previousStatus !== VideoState.PAUSED &&
       previousStatus !== VideoState.BUFFERING &&
       currentStatus === VideoState.PAUSED;
-
     if (currentStatus === VideoState.PLAYING && pauseMenuVisible) {
       player.current?.pauseVideo();
     } else if (wasJustPaused && !pauseMenuVisible) {
-      // Someone clicked on the video
       setPauseMenuVisible(true);
     }
   }, [pauseMenuVisible, currentStatus, previousStatus, isPauseMenuAvailable]);
 
-  useKeyboard(
-    {
-      back: togglePauseMenu,
-    },
-    isPauseMenuAvailable,
-    [pauseMenuVisible],
-  );
+  useKeyboard({ back: togglePauseMenu }, isPauseMenuAvailable, [pauseMenuVisible]);
 
-  const help = useMemo(
-    () => ({
-      back: 'Pause Menu',
-    }),
-    [],
-  );
+  const help = useMemo(() => ({ back: 'Pause Menu' }), []);
   useKeyboardHelp(help, effectsEnabled);
+
+  // Check if song has local instrument files
+  const hasInstruments = Array.isArray(singSetup.instruments) && singSetup.instruments.length > 0;
+
   return (
     <div className={cn('relative', className)} {...containerProps}>
       <PauseMenu onExit={onSongEnd} onResume={closePauseMenu} onRestart={restartSong!} open={pauseMenuVisible} />
       {currentStatus !== VideoState.UNSTARTED && (
         <div
-          className="pointer-events-none absolute inset-0 z-10 bg-black/20"
-          style={{
-            width: `${width}px`,
-            height: `${height}px`,
-          }}>
+          className="absolute inset-0 z-10 bg-black/20"
+          style={{ width: `${width}px`, height: `${height}px` }}>
           <GameOverlay
             isPauseMenuVisible={pauseMenuVisible}
             effectsEnabled={effectsEnabled}
@@ -216,7 +201,7 @@ useInstrumentAudio(song.id, enabledInstruments, currentStatus === VideoState.PLA
           controls={showControls}
           autoplay={autoplay}
           disablekb={process.env.NODE_ENV !== 'development'}
-          volume={newVolumeFFEnabled ? (song.volume ?? song.manualVolume) : song.manualVolume}
+          volume={hasInstruments ? 0 : (newVolumeFFEnabled ? (song.volume ?? song.manualVolume) : song.manualVolume)}
           startAt={song.videoGap ?? 0}
           onStateChange={onStateChangeCallback}
         />
@@ -224,9 +209,7 @@ useInstrumentAudio(song.id, enabledInstruments, currentStatus === VideoState.PLA
           <div
             className="absolute top-1/2 left-0 h-8 w-8 -translate-y-1/2 bg-black opacity-0"
             data-test="make-song-go-fast"
-            onClick={() => {
-              player.current?.setPlaybackSpeed(2);
-            }}
+            onClick={() => { player.current?.setPlaybackSpeed(2); }}
           />
         )}
       </div>
@@ -234,4 +217,4 @@ useInstrumentAudio(song.id, enabledInstruments, currentStatus === VideoState.PLA
   );
 }
 
-export default Player;
+  export default Player;
