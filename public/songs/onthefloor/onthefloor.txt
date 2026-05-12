@@ -9,7 +9,6 @@
 #BPM:120
 #YEAR:2024
 #GENRE:Pop
-#BPM:120
 #LANGUAGE:Cambodia
 #GAP:0
 #ALLKARAOKE_ID:onthefloor

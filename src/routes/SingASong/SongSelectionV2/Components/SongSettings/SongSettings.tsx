@@ -18,11 +18,9 @@ export default function SongSettings({ songPreview, onPlay, keyboardControl, onE
   const [singSetup, setSingSetup] = useState<SingSetup | null>(null);
   const [step, setStep] = useState<"song" | "instruments">("song");
 
-  const onSongStepFinish = (setup: SingSetup) => {
+ const onSongStepFinish = (setup: SingSetup) => {
     setSingSetup(setup);
-    // Auto skip to instruments
     const finalSetup = { ...setup, instruments: ["vocals", "bass", "drums", "other"] };
-    events.songStarted.dispatch(songPreview, finalSetup);
     onPlay({ song: songPreview, ...finalSetup });
   };
 
