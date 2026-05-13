@@ -15,7 +15,7 @@ interface Props {
   onFinish: () => void;
 }
 
-const AUTOSTART_TIMEOUT_S = 15;
+const AUTOSTART_TIMEOUT_S = 0;
 
 function WaitForReadiness({ onFinish }: Props) {
   const [areAllPlayersReady, setAreAllPlayersReady] = useState(false);
@@ -37,7 +37,7 @@ function WaitForReadiness({ onFinish }: Props) {
         allInputsReady = true;
         setAreAllPlayersReady(true);
       });
-      const minTimeElapsed = sleep(isE2E() ? 250 : 1_500);
+      const minTimeElapsed = sleep(0);
       const maxTimeElapsed = sleep(AUTOSTART_TIMEOUT_S * 1_000);
 
       // Only start the music if waiting for readiness takes some time
@@ -48,18 +48,13 @@ function WaitForReadiness({ onFinish }: Props) {
 
       await Promise.race([Promise.all([inputsReady, minTimeElapsed]), maxTimeElapsed]);
       if (waitForReadinessMusic.playing()) waitFinished.play();
-      await sleep(500);
+      await sleep(0);
       waitForReadinessMusic.stop();
       await sleep(1000);
       onFinish();
     })();
   }, []);
 
-  const playerStatuses = players.map(([deviceId, name, player]) => ({
-    confirmed: confirmedPlayers.includes(deviceId),
-    name,
-    player: player,
-  }));
 
   return (
     <div className="typography absolute inset-0 z-[1000] flex h-full w-full flex-col items-center justify-center gap-8 text-xl">
@@ -68,23 +63,6 @@ function WaitForReadiness({ onFinish }: Props) {
           Waiting for all players to click <strong>&quot;Ready&quot;</strong>
         </Typography>
       )}
-      <div className="flex flex-col gap-4 [view-transition-name:player-mic-check-container]">
-        {playerStatuses.map(({ confirmed, name, player }, index) => (
-          <div
-            className="ph-no-capture flex items-center gap-5"
-            key={index}
-            data-test="player-confirm-status"
-            data-name={name}
-            data-confirmed={confirmed}>
-            {!areAllPlayersReady && (
-              <span className="h-12 w-12 text-2xl [&_svg]:h-12! [&_svg]:w-12! [&_svg]:stroke-black">
-                {confirmed ? <CheckCircleOutline /> : <Loader />}
-              </span>
-            )}{' '}
-            <SinglePlayer player={player} />
-          </div>
-        ))}
-      </div>
       {!areAllPlayersReady && (
         <Typography className="text-2xl">
           The song will start automatically in{' '}

@@ -24,7 +24,7 @@ function LandingPage() {
 
   useBackground(true);
 
-  const nextPage = 'menu/';
+  const nextPage = 'game/';
 
   useHotkeys(
     'enter',
