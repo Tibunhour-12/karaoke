@@ -68,7 +68,7 @@ class SongsService {
     const localSong = await this.getLocal(songId);
 
     if (!localSong) {
-      return await fetch(`/songs/${songId}.txt`)
+      return await fetch(`/songs/${songId}/${songId}.txt`)
         .then((response) => response.text())
         .then(convertTxtToSong)
         .then((song) => ({ ...song, local: false }));

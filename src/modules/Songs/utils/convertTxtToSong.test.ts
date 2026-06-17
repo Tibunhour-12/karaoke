@@ -135,7 +135,7 @@ describe('convertTxtToSong', () => {
 
         // uncomment to get the failing file
         // console.log(file);
-        const txt = readFileSync(`${SONGS_FOLDER}/${file}`, { encoding: 'utf-8' }).replace(/\r\n/g, '\n');
+       const txt = readFileSync(`${SONGS_FOLDER}/${file}`, { encoding: 'utf-8' }).replace(/\r\n/g, '\n');
 
         const song = convertTxtToSong(txt);
 

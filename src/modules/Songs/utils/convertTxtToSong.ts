@@ -138,6 +138,7 @@ export default function convertTxtToSong(
   authorUrl?: string,
   sourceUrl?: string,
 ): Song {
+  console.log('TEXT RECEIVED:', JSON.stringify(text.substring(0, 200)));
   const trackNames = getTrackNames(text);
 
   const additionalData = {
@@ -205,7 +206,7 @@ export default function convertTxtToSong(
   let sections: Section[] = [];
   let lastStart = 0;
 
-  text.split('\n').forEach((line) => {
+  text.replace(/\r\n/g, '\n').split('\n').forEach((line) => {
     if (line.startsWith('#')) return;
     const split = line.split(' ');
 

@@ -108,7 +108,10 @@ function Player({
   }, [song, singSetup]);
 
   const duration = usePlayerSetDuration(player, currentStatus);
-  useInstrumentAudio(song.id, enabledInstruments, currentStatus === VideoState.PLAYING);
+ console.log('song.id:', song.id);
+console.log('enabledInstruments:', enabledInstruments);
+console.log('isPlaying:', currentStatus === VideoState.PLAYING);
+useInstrumentAudio(song.id, enabledInstruments, currentStatus === VideoState.PLAYING);
 
   useImperativeHandle(ref, () => ({
     seekTo: (time: seconds) => player.current!.seekTo(time),
@@ -201,7 +204,7 @@ function Player({
           controls={showControls}
           autoplay={autoplay}
           disablekb={process.env.NODE_ENV !== 'development'}
-          volume={hasInstruments ? 0 : (newVolumeFFEnabled ? (song.volume ?? song.manualVolume) : song.manualVolume)}
+         volume={newVolumeFFEnabled ? (song.volume ?? song.manualVolume) : song.manualVolume}
           startAt={song.videoGap ?? 0}
           onStateChange={onStateChangeCallback}
         />

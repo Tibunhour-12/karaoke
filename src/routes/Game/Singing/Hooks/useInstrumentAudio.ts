@@ -2,26 +2,30 @@
 
 const INSTRUMENTS = ["vocals", "bass", "drums", "other"] as const;
 
-export function useInstrumentAudio(songId: string, enabledInstruments: string[], isPlaying: boolean) {
+export function useInstrumentAudio(
+  songId: string,
+  enabledInstruments: string[],
+  isPlaying: boolean,
+) {
   const audioElementsRef = useRef<Record<string, HTMLAudioElement>>({});
-  const loadedRef = useRef(false);
 
+  // Load audio files when songId changes
   useEffect(() => {
-    if (loadedRef.current) return;
-    loadedRef.current = true;
+    const elements: Record<string, HTMLAudioElement> = {};
 
     INSTRUMENTS.forEach((instrument) => {
       const audio = new Audio(`/songs/${songId}/${instrument}.mp3`);
       audio.preload = "auto";
-      audio.muted = false;
       audio.volume = 1;
-      audioElementsRef.current[instrument] = audio;
-      console.log("Created audio element for:", instrument);
+      audio.muted = false;
+      elements[instrument] = audio;
     });
+
+    audioElementsRef.current = elements;
 
     return () => {
       INSTRUMENTS.forEach((instrument) => {
-        audioElementsRef.current[instrument]?.pause();
+        elements[instrument]?.pause();
       });
     };
   }, [songId]);
@@ -34,18 +38,16 @@ export function useInstrumentAudio(songId: string, enabledInstruments: string[],
       const shouldPlay = enabledInstruments.includes(instrument);
       audio.muted = !shouldPlay;
       audio.volume = shouldPlay ? 1 : 0;
-      console.log(`${instrument}: muted=${audio.muted}, volume=${audio.volume}`);
     });
   }, [enabledInstruments]);
 
-  // Play/pause all tracks together
+  // Play/pause
   useEffect(() => {
     INSTRUMENTS.forEach((instrument) => {
       const audio = audioElementsRef.current[instrument];
       if (!audio) return;
       if (isPlaying) {
         audio.play().catch(console.error);
-        console.log("Playing:", instrument);
       } else {
         audio.pause();
       }

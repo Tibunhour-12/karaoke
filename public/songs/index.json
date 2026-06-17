@@ -39,5 +39,39 @@
     ],
     "shortId": 9999,
     "realBpm": 87
+  },
+  {
+    "id": "somkhan",
+    "title": "somkhan",
+    "artist": "SK",
+    "path": "somkhan",
+    "video": "/songs/somkhan/somkhan.mp4",
+    "language": [
+      "Khmer"
+    ],
+    "search": "somkhan",
+    "local": true,
+    "stems": false,
+    "year": "2026",
+    "bpm": 82,
+    "gap": 41000,
+    "tracksCount": 1
+  },
+  {
+    "id": "kon nek nesat",
+    "title": "kon nek nesat",
+    "artist": "Hour",
+    "path": "kon nek nesat",
+    "video": "/songs/kon nek nesat/kon nek nesat.mp4",
+    "language": [
+      "Khmer"
+    ],
+    "search": "kon nek nesat",
+    "local": true,
+    "stems": false,
+    "year": "2026",
+    "bpm": 174,
+    "gap": 13000,
+    "tracksCount": 1
   }
 ]
