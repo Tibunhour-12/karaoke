@@ -68,6 +68,11 @@ function Singing({ songPreview, singSetup, returnToSongSelection, restartSong }:
     return (
       <LayoutGame>
         <div className="relative">
+           <button
+              onClick={returnToSongSelection}
+              className="pointer-events-auto m-[10px] flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-white">
+              ← Back
+            </button>
           <div
             className={`pointer-events-none fixed inset-0 z-10 flex h-full w-full flex-col items-stretch px-10 py-10 transition-opacity duration-500 [view-transition-name:song-preview] ${
               isOverlayVisible ? 'opacity-100' : 'opacity-0'
@@ -81,6 +86,7 @@ function Singing({ songPreview, singSetup, returnToSongSelection, restartSong }:
                 height: `${height}px`,
               }}
             />
+          
             <span
               className="typography text-2xl [view-transition-name:song-preview-artist] 2xl:text-3xl"
               data-test="song-artist">

@@ -130,7 +130,7 @@ useInstrumentAudio(song.id, enabledInstruments, currentStatus === VideoState.PLA
     [setCurrentStatus, onStatusChange],
   );
 
-  const isPauseMenuAvailable = pauseMenu;
+  const isPauseMenuAvailable = false;
 
   const openPauseMenu = () => {
     setPauseMenuVisible(true);
